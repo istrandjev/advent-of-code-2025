@@ -12,8 +12,7 @@ struct light {
     vector<ll> buttons;
     vector<int> joltage;
 };
-
-
+// For debugging purposes only
 ostream& operator<<(ostream& out, const light& l) {
     int n(l.joltage.size());
     auto print_binary = [&](ll x) {
@@ -332,8 +331,6 @@ ll solve2(const vector<light>& lights) {
 
 
 int main() {
-    freopen("10.in", "r", stdin);
-    freopen("10.help", "w", stderr);
     string s;
     vector<light> lights;
     while (getline(cin, s)) {
