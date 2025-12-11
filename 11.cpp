@@ -82,7 +82,6 @@ ll solve2(const vector<vector<int>>& ne, int from, int to, const vector<int>& re
 }
 
 int main() {
-    freopen("11.in", "r", stdin);
     unordered_map<string, int> node_codes;    
     auto get_node_code = [&](const string& s) {
         auto it = node_codes.find(s);
