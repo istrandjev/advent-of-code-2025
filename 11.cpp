@@ -29,26 +29,9 @@ vector<string> split(const string& s, char delim=' ') {
 
 vector<vector<int> > global_ne;
 int target;
-ll dfs(int v) {
-    if (v == target) {
-        return 1;
-    }
-    ll answer = 0;
-    for (auto nxt : global_ne[v]) {
-        answer += dfs(nxt);
-    }
-    return answer;
-}
-ll solve1(const vector<vector<int>>& ne, int from, int to) {
-    int n = (int)ne.size();
-    global_ne = ne;
-    target = to;
-    return dfs(from);    
-}
-
 vector<int> global_required;
 map<pair<int, int>, ll > mem;
-ll dfs2(int v, int mask) {
+ll dfs(int v, int mask) {
     auto it = mem.find({v, mask});
     if (it != mem.end()) {
         return it->second;
@@ -67,18 +50,19 @@ ll dfs2(int v, int mask) {
                 tmask |= (1 << ri);
             }
         }
-        answer += dfs2(nxt, tmask);
+        answer += dfs(nxt, tmask);
     }
     mem[{v, mask}] = answer;
     return answer;
 }
 
-ll solve2(const vector<vector<int>>& ne, int from, int to, const vector<int>& required) {
+ll solve(const vector<vector<int>>& ne, int from, int to, const vector<int>& required) {
     int n = (int)ne.size();
     global_ne = ne;
     target = to;
     global_required = required;
-    return dfs2(from, 0);    
+    mem.clear();
+    return dfs(from, 0);    
 }
 
 int main() {
@@ -109,11 +93,7 @@ int main() {
         }
     }
 
-    cout << "Part 1: " << solve1(ne, get_node_code("you"), get_node_code("out")) << endl;
-    vector<int> required{
-        get_node_code("dac"),
-        get_node_code("fft"),
-    };
-    cout << "Part 2: " << solve2(ne, get_node_code("svr"), get_node_code("out"), required) << endl;
+    cout << "Part 1: " << solve(ne, get_node_code("you"), get_node_code("out"), vector<int>()) << endl;
+    cout << "Part 2: " << solve(ne, get_node_code("svr"), get_node_code("out"), {get_node_code("dac"), get_node_code("fft")}) << endl;
     return 0;
 }
