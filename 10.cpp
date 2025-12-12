@@ -236,8 +236,10 @@ GaussSolver global_gauss_solver(0);
 vector<int> current_values;
 vector<int> min_values;
 
+int total_ways = 0;
 int dfs(int button_index, int row_index) {
     if (button_index < 0) {
+        total_ways++;
         return 0;
     }
 
@@ -329,7 +331,6 @@ ll solve2(const vector<light>& lights) {
     return result;
 }
 
-
 int main() {
     string s;
     vector<light> lights;
@@ -338,5 +339,7 @@ int main() {
     }
     cout << "Part 1: " << solve1(lights) << endl;
     cout << "Part 2: " << solve2(lights) << endl;
+    cout << "Part 3: " << total_ways << endl;
+    
     return 0;
 }

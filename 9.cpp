@@ -123,7 +123,61 @@ ll solve2(const vector<point>& points) {
     }
     return answer;
 }
+
+ll solve3(const vector<point>& points) {
+    set<ll> xs, ys;
+    for (auto p: points) {
+        xs.insert(p.x);
+        xs.insert(p.x + 1);
+        ys.insert(p.y);
+        ys.insert(p.y + 1);
+    }
+    vector<ll> x(all(xs)), y(all(ys));
+    map<ll, int> reverse_x, reverse_y;
+    for (int i = 0; i < (int)x.size(); ++i) {
+        reverse_x[x[i]] = i;
+    }
+
+    for (int i = 0; i < (int)y.size(); ++i) {
+        reverse_y[y[i]] = i;
+    }
+
+    vector<vector<char> > bitmap(xs.size() + 1, vector<char>(ys.size() + 1, 0));
+    for (int i = 1; i < (int)points.size(); ++i) {
+        connect(bitmap, points[i - 1], points[i], reverse_x, reverse_y);
+    }
+    connect(bitmap, points.back(), points[0], reverse_x, reverse_y);
+
+    for (int i = 0; i < (int)bitmap.size(); ++i) {
+        int opened = 0;
+        for (int j = 0; j < (int)bitmap[i].size(); ++j) {
+            if (bitmap[i][j] == '|') {
+                opened++;
+            } else if (bitmap[i][j] == '+') {
+                if (i >= 1 && bitmap[i - 1][j] != 0 && bitmap[i - 1][j] != '*') {
+                    opened++;
+                }
+            }
+            if (bitmap[i][j] == 0 && opened % 2 == 1) {
+                bitmap[i][j] = '*';
+            }
+        }
+    }
+    ll answer = 0;
+    for (int i = 0; i < (int)bitmap[0].size(); ++i) {
+        for (int j = 0; j < (int)bitmap.size(); ++j) {
+            if (bitmap[j][i] != 0) {
+                ll delta_x = (j + 1 != x.size() ? (x[j + 1] - x[j]) : 1);
+                ll delta_y = (i + 1 != y.size() ? (y[i + 1] - y[i]) : 1);
+                answer += delta_x * delta_y;
+            }
+        }
+    }
+    return answer;
+}
+
 int main() {
+    freopen("9.in", "r", stdin);
     vector<point> points;
     string s;
     while (getline(cin, s)) {
@@ -131,5 +185,6 @@ int main() {
     }
     cout << "Part 1: " << solve1(points) << endl;
     cout << "Part 2: " << solve2(points) << endl;
+    cout << "Part 3: " << solve3(points) << endl;
     return 0;
 }
