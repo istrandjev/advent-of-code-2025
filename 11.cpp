@@ -31,15 +31,23 @@ vector<vector<int> > global_ne;
 int target;
 vector<int> global_required;
 map<pair<int, int>, ll > mem;
+
+set<pair<int, int> > path;
 ll dfs(int v, int mask) {
+    if (path.count({v, mask})) {
+        return 0;
+    }
+    path.insert({v, mask});
     auto it = mem.find({v, mask});
     if (it != mem.end()) {
+        path.erase({v, mask});
         return it->second;
     }
 
     if (v == target) {
         ll result = (mask == ((1 << int(global_required.size())) - 1));
         mem[{v, mask}] = result;
+        path.erase({v, mask});
         return result;
     }
     ll answer = 0;
@@ -53,6 +61,7 @@ ll dfs(int v, int mask) {
         answer += dfs(nxt, tmask);
     }
     mem[{v, mask}] = answer;
+    path.erase({v, mask});
     return answer;
 }
 
@@ -62,6 +71,7 @@ ll solve(const vector<vector<int>>& ne, int from, int to, const vector<int>& req
     target = to;
     global_required = required;
     mem.clear();
+    path.clear();
     return dfs(from, 0);    
 }
 
